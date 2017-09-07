@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 
 import Player from '../objects/Player';
-// import Debugger from '../objects/Debugger';
 import Fruit from '../objects/Fruit';
+import Wall from '../objects/Wall';
 
 import NetworkHandler from 'src/components/objects/NetworkHandler';
 
@@ -36,6 +36,16 @@ class GameState extends Phaser.State {
         }
     }
 
+    _renderWalls(walls) {
+        this._walls = [];
+
+        for (const wallModel of walls) {
+            const wall = new Wall(this.game, wallModel.x, wallModel.y);
+
+            this._walls.push(wall);
+        }
+    }
+
     _killFruits() {
         for (const fruit of this._fruits) {
             fruit.kill();
@@ -57,11 +67,11 @@ class GameState extends Phaser.State {
      * Preloads the game
      */
     preload() {
-        this.game.load.image('square', 'images/square.png');
         this.game.load.image('fruit', 'images/fruit.png');
         this.game.load.image('snake', 'images/snake_body.png');
         this.game.load.image('banana', 'images/banana.png');
         this.game.load.image('red', 'images/red.png');
+        this.game.load.image('wall', 'images/wall.gif');
     }
 
     /**
@@ -90,6 +100,7 @@ class GameState extends Phaser.State {
 
             this._killFruits();
             this._renderPlayers(payload.players);
+            this._renderWalls(payload.walls);
         });
 
         this._networkHandler.on(NetworkHandler.events.GAME_ROUND_COUNTDOWN, countdownValue => {
