@@ -38,6 +38,10 @@ class GameState extends Phaser.State {
 
     _renderCourse() {
         this.game.stage.setBackgroundColor(this._course.settings.backgroundColor);
+        this.game.scale.setGameSize(
+            this._course.settings.world.width,
+            this._course.settings.world.height
+        );
 
         for (const wall of this._walls) {
             wall.kill();
