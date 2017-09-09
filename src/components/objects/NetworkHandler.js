@@ -5,7 +5,7 @@ import utils from 'src/components/utils/utils';
 
 import PlayerModel from 'src/components/models/PlayerModel';
 import FruitModel from 'src/components/models/FruitModel';
-import WallModel from 'src/components/models/WallModel';
+import CourseModel from 'src/components/models/CourseModel';
 
 const YOU_CONNECTED = 'you-connected';
 
@@ -50,12 +50,8 @@ class NetworkHandler extends EventEmitter {
         }
     }
 
-    _createWalls(walls) {
-        this._walls = [];
-
-        for (const wall of walls) {
-            this._walls.push(new WallModel(wall));
-        }
+    _createCourse(course) {
+        this._course = new CourseModel(course);
     }
 
     _onRoomStateReceived(payload) {
@@ -73,11 +69,11 @@ class NetworkHandler extends EventEmitter {
         console.log('GAME_ROUND_INITIATED!');
 
         this._createPlayers(payload.players);
-        this._createWalls(payload.walls);
+        this._createCourse(payload.course);
 
         this.emit(NetworkHandler.events.GAME_ROUND_INITIATED, {
             players: this._players,
-            walls: this._walls,
+            course: this._course,
         });
     }
 

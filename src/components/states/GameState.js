@@ -36,10 +36,16 @@ class GameState extends Phaser.State {
         }
     }
 
-    _renderWalls(walls) {
+    _renderCourse() {
+        this.game.stage.setBackgroundColor(this._course.settings.backgroundColor);
+
+        for (const wall of this._walls) {
+            wall.kill();
+        }
+
         this._walls = [];
 
-        for (const wallModel of walls) {
+        for (const wallModel of this._course.walls) {
             const wall = new Wall(this.game, wallModel.x, wallModel.y);
 
             this._walls.push(wall);
@@ -59,6 +65,8 @@ class GameState extends Phaser.State {
         this._currentDirection = null;
         this._players = [];
         this._fruits = [];
+        this._course = null;
+        this._walls = [];
         this._keys = {};
     }
 
@@ -97,10 +105,11 @@ class GameState extends Phaser.State {
         this._networkHandler.on(NetworkHandler.events.GAME_ROUND_INITIATED, payload => {
             this._currentDirection = null;
             this._oldDirection = null;
+            this._course = payload.course;
 
             this._killFruits();
             this._renderPlayers(payload.players);
-            this._renderWalls(payload.walls);
+            this._renderCourse();
         });
 
         this._networkHandler.on(NetworkHandler.events.GAME_ROUND_COUNTDOWN, countdownValue => {
