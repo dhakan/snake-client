@@ -60,6 +60,8 @@ class GameState extends Phaser.State {
         this.game.load.image('square', 'images/square.png');
         this.game.load.image('fruit', 'images/fruit.png');
         this.game.load.image('snake', 'images/snake_body.png');
+        this.game.load.image('banana', 'images/banana.png');
+        this.game.load.image('red', 'images/red.png');
     }
 
     /**
@@ -111,7 +113,7 @@ class GameState extends Phaser.State {
      * Spawns a fruit on a random grid position.
      */
     _spawnFruit(fruitModel) {
-        const fruit = new Fruit(this.game, fruitModel.x, fruitModel.y);
+        const fruit = new Fruit(this.game, fruitModel.x, fruitModel.y, fruitModel.value);
 
         this._fruits.push(fruit);
     }

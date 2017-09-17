@@ -7,6 +7,7 @@ class FruitModel {
         this._id = data.id;
         this._x = data.position.x;
         this._y = data.position.y;
+        this._value = data.value;
     }
 
     get x() {
@@ -15,6 +16,10 @@ class FruitModel {
 
     get y() {
         return this._y;
+    }
+
+    get value() {
+        return this._value;
     }
 }
 

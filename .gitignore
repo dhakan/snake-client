@@ -3,10 +3,4 @@ public
 *.log
 *.tmp
 npm-debug.log*
-.idea/modules.xml
-.idea/snake-client.iml
-.idea/workspace.xml
-.idea/jsLibraryMappings.xml
-.idea/misc.xml
-.idea/vcs.xml
-.idea/watcherTasks.xml
+.idea
