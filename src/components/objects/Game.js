@@ -8,7 +8,7 @@ class Game extends Phaser.Game {
      * Game constructor
      */
     constructor(settings, networkHandler) {
-        super(settings.world.WIDTH, settings.world.HEIGHT, Phaser.AUTO, 'content', null);
+        super(0, 0, Phaser.AUTO, 'content', null);
         this.settings = settings;
         this.state.add('GameState', GameState, false);
         this.state.start('GameState', true, false, networkHandler);

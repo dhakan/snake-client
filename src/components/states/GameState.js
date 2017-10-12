@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 
 import Player from '../objects/Player';
-// import Debugger from '../objects/Debugger';
 import Fruit from '../objects/Fruit';
+import Wall from '../objects/Wall';
 
 import NetworkHandler from 'src/components/objects/NetworkHandler';
 
@@ -36,6 +36,26 @@ class GameState extends Phaser.State {
         }
     }
 
+    _renderCourse() {
+        this.game.stage.setBackgroundColor(this._course.settings.backgroundColor);
+        this.game.scale.setGameSize(
+            this._course.settings.world.width,
+            this._course.settings.world.height
+        );
+
+        for (const wall of this._walls) {
+            wall.kill();
+        }
+
+        this._walls = [];
+
+        for (const wallModel of this._course.walls) {
+            const wall = new Wall(this.game, wallModel.x, wallModel.y);
+
+            this._walls.push(wall);
+        }
+    }
+
     _killFruits() {
         for (const fruit of this._fruits) {
             fruit.kill();
@@ -49,6 +69,8 @@ class GameState extends Phaser.State {
         this._currentDirection = null;
         this._players = [];
         this._fruits = [];
+        this._course = null;
+        this._walls = [];
         this._keys = {};
     }
 
@@ -57,11 +79,11 @@ class GameState extends Phaser.State {
      * Preloads the game
      */
     preload() {
-        this.game.load.image('square', 'images/square.png');
         this.game.load.image('fruit', 'images/fruit.png');
         this.game.load.image('snake', 'images/snake_body.png');
         this.game.load.image('banana', 'images/banana.png');
         this.game.load.image('red', 'images/red.png');
+        this.game.load.image('wall', 'images/wall.gif');
     }
 
     /**
@@ -87,9 +109,11 @@ class GameState extends Phaser.State {
         this._networkHandler.on(NetworkHandler.events.GAME_ROUND_INITIATED, payload => {
             this._currentDirection = null;
             this._oldDirection = null;
+            this._course = payload.course;
 
             this._killFruits();
             this._renderPlayers(payload.players);
+            this._renderCourse();
         });
 
         this._networkHandler.on(NetworkHandler.events.GAME_ROUND_COUNTDOWN, countdownValue => {
