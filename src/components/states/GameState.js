@@ -97,28 +97,28 @@ class GameState extends Phaser.State {
 
         this._networkHandler.emitClientLoaded();
 
-        this._networkHandler.on(NetworkHandler.events.CONNECTED, () => {
-            this._networkHandler.emitClientLoaded();
-        });
+        // this._networkHandler.on(NetworkHandler.events.CONNECTED, () => {
+        //     console.log('you connected')
+        //     this._networkHandler.emitClientLoaded();
+        // });
 
         this._networkHandler.on(NetworkHandler.events.ROOM_STATE, payload => {
-            this._killFruits();
-            this._renderPlayers(payload.players);
-        });
-
-        this._networkHandler.on(NetworkHandler.events.GAME_ROUND_INITIATED, payload => {
+            console.log('Game round initiated', payload)
             this._currentDirection = null;
             this._oldDirection = null;
             this._course = payload.course;
-
+    
             this._killFruits();
             this._renderPlayers(payload.players);
             this._renderCourse();
         });
 
-        this._networkHandler.on(NetworkHandler.events.GAME_ROUND_COUNTDOWN, countdownValue => {
-            this._setCountdownValue(countdownValue);
-        });
+        // this._networkHandler.on(NetworkHandler.events.GAME_ROUND_INITIATED, payload => {
+        // });
+
+        // this._networkHandler.on(NetworkHandler.events.GAME_ROUND_COUNTDOWN, countdownValue => {
+        //     this._setCountdownValue(countdownValue);
+        // });
 
         this._networkHandler.on(NetworkHandler.events.GAME_STATE, gameState => {
             this._killFruits();
