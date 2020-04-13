@@ -46,6 +46,18 @@ class NetworkHandler extends EventEmitter {
       this._messages.GAME_STATE,
       this._onGameStateReceived.bind(this)
     );
+    this._socket.on(
+      this._messages.FRUIT_COLLECTED,
+      this._onFruitCollected.bind(this)
+    );
+    this._socket.on(
+      this._messages.PLAYER_DIED,
+      this._onPlayerDied.bind(this)
+    );
+    this._socket.on(
+      this._messages.PLAYER_REDUCTION,
+      this._onPlayerReduction.bind(this)
+    );
 
     this.emit(NetworkHandler.events.CONNECTED, payload);
   }
@@ -72,6 +84,21 @@ class NetworkHandler extends EventEmitter {
       players: this._players,
       course: this._course,
     });
+  }
+
+  _onFruitCollected() {
+    console.log('FRUIT_COLLECTED')
+    this.emit(NetworkHandler.events.FRUIT_COLLECTED);
+  }
+
+  _onPlayerDied() {
+    console.log('PLAYER_DIED')
+    this.emit(NetworkHandler.events.PLAYER_DIED);
+  }
+  
+  _onPlayerReduction() {
+    console.log('PLAYER_REDUCTION')
+    this.emit(NetworkHandler.events.PLAYER_REDUCTION);
   }
 
   // _onGameRoundInitiated(payload) {
@@ -134,6 +161,8 @@ NetworkHandler.events = {
   GAME_ROUND_INITIATED: "on-game-round-initiated",
   GAME_ROUND_COUNTDOWN: "on-game-round-countdown",
   GAME_STATE: "on-game-state",
+  FRUIT_COLLECTED: "on-fruit-collected",
+  PLAYER_DIED: "player-died",
 };
 
 export default NetworkHandler;
