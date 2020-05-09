@@ -80,10 +80,15 @@ class GameState extends Phaser.State {
      */
     preload() {
         this.game.load.image('fruit', 'images/fruit.png');
-        this.game.load.image('snake', 'images/snake_body.png');
+        this.game.load.image('snake', 'images/snake.png');
         this.game.load.image('banana', 'images/banana.png');
         this.game.load.image('red', 'images/red.png');
         this.game.load.image('wall', 'images/wall.gif');
+
+        this.game.load.audio('stage', ['audio/stage.mp3']);
+        this.game.load.audio('fruit_collected', ['audio/fruit_collected.mp3']);
+        this.game.load.audio('death', ['audio/death.mp3']);
+        this.game.load.audio('reduction', ['audio/reduction.mp3']);
     }
 
     /**
@@ -97,28 +102,28 @@ class GameState extends Phaser.State {
 
         this._networkHandler.emitClientLoaded();
 
-        this._networkHandler.on(NetworkHandler.events.CONNECTED, () => {
-            this._networkHandler.emitClientLoaded();
-        });
+        // this._networkHandler.on(NetworkHandler.events.CONNECTED, () => {
+        //     console.log('you connected')
+        //     this._networkHandler.emitClientLoaded();
+        // });
 
         this._networkHandler.on(NetworkHandler.events.ROOM_STATE, payload => {
-            this._killFruits();
-            this._renderPlayers(payload.players);
-        });
-
-        this._networkHandler.on(NetworkHandler.events.GAME_ROUND_INITIATED, payload => {
+            console.log('Game round initiated', payload)
             this._currentDirection = null;
             this._oldDirection = null;
             this._course = payload.course;
-
+    
             this._killFruits();
             this._renderPlayers(payload.players);
             this._renderCourse();
         });
 
-        this._networkHandler.on(NetworkHandler.events.GAME_ROUND_COUNTDOWN, countdownValue => {
-            this._setCountdownValue(countdownValue);
-        });
+        // this._networkHandler.on(NetworkHandler.events.GAME_ROUND_INITIATED, payload => {
+        // });
+
+        // this._networkHandler.on(NetworkHandler.events.GAME_ROUND_COUNTDOWN, countdownValue => {
+        //     this._setCountdownValue(countdownValue);
+        // });
 
         this._networkHandler.on(NetworkHandler.events.GAME_STATE, gameState => {
             this._killFruits();
@@ -129,6 +134,25 @@ class GameState extends Phaser.State {
 
             this._renderPlayers(gameState.players);
         });
+
+        const fruitCollectedSfx = this.game.add.audio('fruit_collected');
+        const deathSfx = this.game.add.audio('death');
+        const reductionSfx = this.game.add.audio('reduction');
+        
+        this._networkHandler.on(NetworkHandler.events.FRUIT_COLLECTED, () => {
+            fruitCollectedSfx.play()
+        })
+        
+        this._networkHandler.on(NetworkHandler.events.PLAYER_DIED, () => {
+            deathSfx.play()
+        })
+        
+        this._networkHandler.on(NetworkHandler.events.PLAYER_REDUCTION, () => {
+            reductionSfx.play()
+        })
+        
+        const music = this.game.add.audio('stage');
+        music.loopFull();
 
         this._addKeyListeners();
     }

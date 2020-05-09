@@ -21,7 +21,6 @@
     "css-brunch": "2.6.1",
     "javascript-brunch": "2.0.0",
     "jshint-brunch": "2.0.0",
-    "sass-brunch": "2.7.0",
     "surge": "0.19.0",
     "uglify-js-brunch": "2.0.1"
   },

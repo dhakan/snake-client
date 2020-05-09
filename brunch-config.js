@@ -19,10 +19,7 @@ module.exports = {
     plugins: {
         babel: {
             presets: ['es2015']
-        },
-        sass: {
-            mode: 'native',
-        },
+        }
     },
     npm: {
         globals: {
